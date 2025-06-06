@@ -1,0 +1,76 @@
+---
+title: "Intro al web scraping"
+author: "Fabricio Lennart"
+date: "2025-06-06"
+format: 
+  html:
+    code-fold: true       
+    code-summary: "Mostrar código"
+jupyter: python3
+               
+---
+
+
+
+# Introducción
+
+![Intro imagen](https://miro.medium.com/v2/resize:fit:1400/1*2zExOfBxyASKFouvydj9Yw.jpeg)
+
+
+Usaremos como ejemplo la página de Wikipedia de una de mis películas favoritas, llamada **The Shawshank Redemption**. Puedes visitar esta web en el siguiente enlace:  
+[link](https://en.wikipedia.org/wiki/The_Shawshank_Redemption)
+
+Lo que haremos es mostrarte la herramienta **Developer Tools** que todo navegador tiene, y luego guardaremos el HTML de la página en una ubicación accesible para poder abrirla y usarla desde el siguiente código de Python.
+
+
+---
+
+
+```{python}
+# usamos la ruta para ingresar a el archivo htmml y leer su contenido desde python
+
+with open("../recursos/page_example.html", "r", encoding="utf-8") as file:
+    contenido = file.read()
+    # print(contenido)
+
+```
+
+---
+
+## Tabla de códigos de estado HTTP comunes
+
+| Código | Significado                      |
+|--------|---------------------------------|
+| 200    | OK (Petición exitosa)            |
+| 301    | Redirección permanente           |
+| 302    | Redirección temporal             |
+| 400    | Solicitud incorrecta (Bad Request)|
+| 401    | No autorizado (Unauthorized)     |
+| 403    | Prohibido (Forbidden)            |
+| 404    | No encontrado (Not Found)        |
+| 500    | Error interno del servidor       |
+| 502    | Puerta de enlace incorrecta      |
+| 503    | Servicio no disponible           |
+
+---
+
+```{python}
+# ahora en lugar de hacerlo manual tratemos de usar python
+import requests as rq
+
+url = "https://en.wikipedia.org/wiki/The_Shawshank_Redemption"
+
+def check_request(url):
+    peticion = rq.get(url)
+    if peticion.status_code == 200:
+        print("La petición ha sido exitosa")
+    else:
+        print(f"Error en la solicitud. Código de estado: {peticion.status_code}")
+
+check_request(url)
+
+```
+
+
+---
+

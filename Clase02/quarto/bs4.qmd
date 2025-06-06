@@ -1,0 +1,70 @@
+---
+title: "Intro al web scraping"
+author: "Fabricio Lennart"
+date: "2025-06-06"
+format: 
+  html:
+    code-fold: true       
+    code-summary: "Mostrar código"
+jupyter: python3
+               
+---
+
+
+
+# Introducción
+
+![Intro imagen](https://miro.medium.com/v2/resize:fit:1400/1*2zExOfBxyASKFouvydj9Yw.jpeg)
+
+Es momento de jguar con bs4 una de las librerias mas famosas para hacer scraping de datos
+
+---
+
+```{python}
+# ahora en lugar de hacerlo manual tratemos de usar python
+import requests as rq
+from bs4 import BeautifulSoup
+
+url = "https://en.wikipedia.org/wiki/The_Shawshank_Redemption"
+
+def request_to_soup(url):
+    peticion = rq.get(url)
+    if peticion.status_code == 200:
+        print("La petición ha sido exitosa")
+        soup = BeautifulSoup(peticion.text, "html.parser")
+        return soup
+    else:
+        print(f"Error en la solicitud. Código de estado: {peticion.status_code}")
+
+
+soup = request_to_soup(url)
+catlinks_div = soup.find("div", id="mw-normal-catlinks")
+    
+if catlinks_div:
+    # Buscar el ul que contiene las categorías dentro del div
+    ul = catlinks_div.find("ul")
+    
+    if ul:
+        # Extraer todos los enlaces <a> dentro de los <li>
+        categorias = []
+        
+        for li in ul.find_all("li"):
+            a = li.find("a")
+            
+            if a:
+                titulo = a.get_text(strip=True)
+                href = a['href']
+                categorias.append((titulo, href))
+        
+        # Mostrar las categorías encontradas
+        for titulo, href in categorias:
+            print(f"{titulo} -> https://en.wikipedia.org{href}")
+    else:
+        print("No se encontró la lista de categorías (ul).")
+else:
+    print("No se encontró el div con id 'mw-normal-catlinks'.")
+
+```
+
+---
+
