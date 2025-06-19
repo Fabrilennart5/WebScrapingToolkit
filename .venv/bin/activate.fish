@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/media/fabri/Toshiba Disk/Proyectos /WebScrapingToolkit/.venv"
+set -gx VIRTUAL_ENV "/persistent/home/fabri/proyectos/WebScrapingToolkit/.venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

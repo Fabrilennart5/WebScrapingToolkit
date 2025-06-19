@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/media/fabri/Toshiba Disk/Proyectos /WebScrapingToolkit/.venv/bin/python3" "$0" "$@"
-' '''
+#!/persistent/home/fabri/proyectos/WebScrapingToolkit/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

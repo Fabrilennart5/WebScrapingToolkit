@@ -1,0 +1,59 @@
+---
+title: "Intro al web scraping"
+author: "Fabricio Lennart"
+date: "2025-06-06"
+format: 
+  html:
+    code-fold: true       
+    code-summary: "Mostrar código"
+jupyter: python3
+               
+---
+
+
+# 🧠 Aprendiendo conceptos de la web: ¿Qué es el DOM?
+DOM significa Document Object Model (Modelo de Objetos del Documento). Es una estructura en forma de árbol que representa la página web cargada en el navegador.
+
+Cada elemento HTML (como <div>, <p>, <h1>, etc.) se convierte en un nodo dentro de ese árbol. Esto permite que los lenguajes de programación, como JavaScript o Python, accedan, lean y modifiquen fácilmente el contenido de una página web.
+
+👉 En resumen:
+El DOM es la forma estructurada en la que el navegador interpreta una página web, y es lo que realmente vemos y manipulamos cuando hacemos scraping.
+
+🔗 En el siguiente ejercicio usamos esta página como ejemplo: https://quotes.toscrape.com/
+
+
+```{python}
+# importamos las librerias
+import requests as rq
+from bs4 import BeautifulSoup
+
+# para este nuevo ejercicio usaremos la url de books to scrape
+
+url = "https://quotes.toscrape.com/"
+
+def peticion_pagina(url):
+    solicitud = rq.get(url)
+    if solicitud.status_code == 200:
+        print("solicitud exitosa se retorna el contenido")
+        soup = BeautifulSoup(solicitud.text, "html.parser")
+        return soup
+    else:
+        print(f"hubo un error, el status es: {solicitud.status_code}")
+# imprimimos el contenido de esta url usando get
+respuesta = peticion_pagina(url)
+
+def albert_quotes(respuesta):
+    quotes = respuesta.find_all("div", class_="quote")
+    for quote in quotes:
+        autor = quote.find("small", class_="author").text
+        if autor == "Albert Einstein":
+            texto = quote.find("span", class_="text").text
+            print(f"Autor: {autor}")
+            print(f"Frase: {texto}")
+            print("-" * 30)
+        
+
+#probamos viendo 
+frases_albert = albert_quotes(respuesta)
+
+```

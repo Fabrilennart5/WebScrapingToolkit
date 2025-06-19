@@ -39,10 +39,10 @@ deactivate nondestructive
 if [ "${OSTYPE:-}" = "cygwin" ] || [ "${OSTYPE:-}" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
-    export VIRTUAL_ENV=$(cygpath "/media/fabri/Toshiba Disk/Proyectos /WebScrapingToolkit/.venv")
+    export VIRTUAL_ENV=$(cygpath "/persistent/home/fabri/proyectos/WebScrapingToolkit/.venv")
 else
     # use the path as-is
-    export VIRTUAL_ENV="/media/fabri/Toshiba Disk/Proyectos /WebScrapingToolkit/.venv"
+    export VIRTUAL_ENV="/persistent/home/fabri/proyectos/WebScrapingToolkit/.venv"
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"
