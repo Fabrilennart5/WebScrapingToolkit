@@ -1,0 +1,122 @@
+---
+title: "Web Scraping en Acción: ¡A Extraer Ofertas!"
+author: "Fabricio Lennart"
+date: "2025-06-06"
+format:
+  html:
+    code-fold: true
+    code-summary: "Mostrar código"
+jupyter: python3
+
+---
+
+# 🚀 ¡Manos a la Obra!
+
+---
+
+### Preparandonos para el Mundo Real
+
+En esta clase, vamos a sumergirnos de lleno en un escenario que verán muy a menudo en el mundo del **web scraping**. Imaginenemos esto: una tienda online nos contrató. Su objetivo es simple: quieren saber qué hace su competencia. Nuestra tarea será **"raspar"** los productos en **oferta** de uno de sus rivales para que puedan comparar precios, características y mejorar sus propias estrategias.
+
+---
+
+### 🌐 La Web de Prueba: 
+
+Para este reto, vamos a usar una página web diseñada específicamente para practicar web scraping:
+
+[https://webscraper.io/test-sites/e-commerce/allinone](https://webscraper.io/test-sites/e-commerce/allinone)
+
+Aquí es donde nuestro código hará su magia para encontrar y extraer los datos de los productos.
+
+---
+
+
+```{python}
+from bs4 import BeautifulSoup
+import requests as rq
+
+url = "https://webscraper.io/test-sites/e-commerce/allinone"
+respuesta = rq.get(url)
+soup = BeautifulSoup(respuesta.text, "html.parser")
+
+productos_html = soup.select("div.col-md-4.col-xl-4.col-lg-4")
+
+productos = []
+for producto in productos_html:
+    # Extrae el nombre COMPLETO del atributo 'title' del enlace <a>
+    nombre_completo = producto.select_one(".title")["title"] 
+    precio = producto.select_one(".price span").get_text(strip=True)
+    productos.append({"Product": nombre_completo, "Price": precio})
+    print(f"{nombre_completo} - {precio}")
+
+print(f"Se encontraron {len(productos)} productos")
+```
+
+
+---
+
+# 💾 Guardando Nuestros Datos: CSV
+
+
+```{python}
+
+import csv
+from pathlib import Path
+
+# Definir rutas
+project_base = Path("/persistent/home/fabri/proyectos/WebScrapingToolkit")
+output_dir = project_base / "Clase04" / "recursos"
+output_file = output_dir / "productos.csv"
+
+# Crear directorio si no existe
+output_dir.mkdir(parents=True, exist_ok=True)
+
+# Guardar CSV 
+with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=["Product", "Price"])
+    writer.writeheader()
+    writer.writerows(productos)
+
+# Mostrar ubicación (ruta relativa al proyecto)
+print(f"✓ CSV guardado en: {output_file.relative_to(project_base)}")
+
+```
+
+---
+
+# 💾 Guardando Nuestros Datos: JSON
+
+```{python}
+import json
+from pathlib import Path
+
+# Definir rutas
+project_base = Path("/persistent/home/fabri/proyectos/WebScrapingToolkit")
+output_dir = project_base / "Clase04" / "recursos"
+output_file = output_dir / "products.json"  # Nombre del archivo JSON
+
+# Crear directorio si no existe
+output_dir.mkdir(parents=True, exist_ok=True)
+
+# Guardar datos como JSON
+with open(output_file, "w", encoding='utf-8') as f:  # Corregido: solo la ruta
+    json.dump(productos, f, indent=4, ensure_ascii=False)  # ensure_ascii=False para caracteres especiales
+
+# Mostrar ubicación (ruta relativa al proyecto)
+print(f"✓ JSON guardado en: {output_file.relative_to(project_base)}")
+```
+
+
+### El Paso Final y Más Importante: Elegir Dónde Guardar tus Datos
+
+Una vez que logramos extraer esa información valiosa de la web, viene una pregunta crucial: **¿dónde y cómo la guardamos?** La forma en que almacenamos nuestros datos no es un detalle menor; depende totalmente de **quién va a usar esa información y para qué**.
+
+Pensemoslo así:
+
+* Si los datos los va a analizar un equipo de marketing en una hoja de cálculo, formatos como **CSV**, **XLS** o **XLSX** son perfectos porque son compatibles con programas como Excel.
+* Pero si la información va a ir directamente a una base de datos **NoSQL** (como MongoDB) o si necesitamos intercambiarla con una **API**, entonces el formato **JSON** es la mejor opción. Es super flexible y maneja muy bien las estructuras de datos complejas.
+
+Aprender a guardar tus datos en el formato correcto es lo que realmente hace que todo el esfuerzo del *scraping* valga la pena, transformando la información cruda en un recurso útil y listo para usar.
+
+---
+
